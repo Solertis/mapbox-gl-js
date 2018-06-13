@@ -94,7 +94,7 @@ export function performSymbolLayout(bucket: SymbolBucket,
 
     const oneEm = 24;
     const lineHeight = layout.get('text-line-height') * oneEm;
-    const textAlongLine = layout.get('text-rotation-alignment') === 'map' && layout.get('symbol-placement') === 'line';
+    const textAlongLine = layout.get('text-rotation-alignment') === 'map' && layout.get('symbol-placement') !== 'point';
     const keepUpright = layout.get('text-keep-upright');
 
 
@@ -111,7 +111,7 @@ export function performSymbolLayout(bucket: SymbolBucket,
             const spacingIfAllowed = allowsLetterSpacing(text) ? spacing : 0;
             const textAnchor = layout.get('text-anchor').evaluate(feature, {});
             const textJustify = layout.get('text-justify').evaluate(feature, {});
-            const maxWidth = layout.get('symbol-placement') !== 'line' ?
+            const maxWidth = layout.get('symbol-placement') === 'point' ?
                 layout.get('text-max-width').evaluate(feature, {}) * oneEm :
                 0;
 
@@ -191,8 +191,8 @@ function addFeature(bucket: SymbolBucket,
         textPadding = layout.get('text-padding') * bucket.tilePixelRatio,
         iconPadding = layout.get('icon-padding') * bucket.tilePixelRatio,
         textMaxAngle = layout.get('text-max-angle') / 180 * Math.PI,
-        textAlongLine = layout.get('text-rotation-alignment') === 'map' && layout.get('symbol-placement') === 'line',
-        iconAlongLine = layout.get('icon-rotation-alignment') === 'map' && layout.get('symbol-placement') === 'line',
+        textAlongLine = layout.get('text-rotation-alignment') === 'map' && layout.get('symbol-placement') !== 'point',
+        iconAlongLine = layout.get('icon-rotation-alignment') === 'map' && layout.get('symbol-placement') !== 'point',
         symbolPlacement = layout.get('symbol-placement'),
         textRepeatDistance = symbolMinDistance / 2;
 
@@ -230,6 +230,12 @@ function addFeature(bucket: SymbolBucket,
                     addSymbolAtAnchor(line, anchor);
                 }
             }
+        }
+    } else if (symbolPlacement === 'line-center') {
+        for (const line of feature.geometry) {
+            // Use unclipped lines.
+            // TODO: what does multiple lines in a geometry mean in this case?
+            addSymbolAtAnchor(line, getCenterAnchor(line));
         }
     } else if (feature.type === 'Polygon') {
         for (const polygon of classifyRings(feature.geometry, 0)) {

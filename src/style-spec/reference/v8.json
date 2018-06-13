@@ -861,6 +861,9 @@
         },
         "line": {
           "doc": "The label is placed along the line of the geometry. Can only be used on `LineString` and `Polygon` geometries."
+        },
+        "line-center": {
+          "doc": "The label is placed at the center of the line of the geometry. Can only be used on `LineString` and `Polygon` geometries. The center is calculated based on the entirety of the geometry included in the tile buffers, and the label may extend past the edge of the tile."
         }
       },
       "default": "point",
@@ -1008,13 +1011,13 @@
       "type": "enum",
       "values": {
         "map": {
-          "doc": "When `symbol-placement` is set to `point`, aligns icons east-west. When `symbol-placement` is set to `line`, aligns icon x-axes with the line."
+          "doc": "When `symbol-placement` is set to `point`, aligns icons east-west. When `symbol-placement` is set to `line` or `line-center`, aligns icon x-axes with the line."
         },
         "viewport": {
           "doc": "Produces icons whose x-axes are aligned with the x-axis of the viewport, regardless of the value of `symbol-placement`."
         },
         "auto": {
-          "doc": "When `symbol-placement` is set to `point`, this is equivalent to `viewport`. When `symbol-placement` is set to `line`, this is equivalent to `map`."
+          "doc": "When `symbol-placement` is set to `point`, this is equivalent to `viewport`. When `symbol-placement` is set to `line` or `line-center`, this is equivalent to `map`."
         }
       },
       "default": "auto",
@@ -1251,7 +1254,10 @@
           "icon-rotation-alignment": "map"
         },
         {
-          "symbol-placement": "line"
+          "symbol-placement": [
+              "line",
+              "line-center"
+          ]
         }
       ],
       "sdk-support": {
@@ -1445,13 +1451,13 @@
       "type": "enum",
       "values": {
         "map": {
-          "doc": "When `symbol-placement` is set to `point`, aligns text east-west. When `symbol-placement` is set to `line`, aligns text x-axes with the line."
+          "doc": "When `symbol-placement` is set to `point`, aligns text east-west. When `symbol-placement` is set to `line` or `line-center`, aligns text x-axes with the line."
         },
         "viewport": {
           "doc": "Produces glyphs whose x-axes are aligned with the x-axis of the viewport, regardless of the value of `symbol-placement`."
         },
         "auto": {
-          "doc": "When `symbol-placement` is set to `point`, this is equivalent to `viewport`. When `symbol-placement` is set to `line`, this is equivalent to `map`."
+          "doc": "When `symbol-placement` is set to `point`, this is equivalent to `viewport`. When `symbol-placement` is set to `line` or `line-center`, this is equivalent to `map`."
         }
       },
       "default": "auto",
@@ -1772,7 +1778,10 @@
       "requires": [
         "text-field",
         {
-          "symbol-placement": "line"
+            "symbol-placement": [
+                "line",
+                "line-center"
+            ]
         }
       ],
       "sdk-support": {
@@ -1860,7 +1869,10 @@
           "text-rotation-alignment": "map"
         },
         {
-          "symbol-placement": "line"
+            "symbol-placement": [
+                "line",
+                "line-center"
+            ]
         }
       ],
       "sdk-support": {

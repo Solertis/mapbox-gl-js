@@ -13,7 +13,7 @@ import assert from 'assert';
 export { getAnchors, getCenterAnchor };
 
 function getCenterAnchor(line: Array<Point>) {
-    // TODO: Handle text-max-angle calculation and either reject or find alternative
+    // TO DO: Handle text-max-angle calculation and either reject or find alternative
     let lineLength = 0;
     for (let k = 0; k < line.length - 1; k++) {
         lineLength += line[k].dist(line[k + 1]);
@@ -44,6 +44,7 @@ function getCenterAnchor(line: Array<Point>) {
         prevDistance += segmentDistance;
     }
     assert(false);
+    return new Anchor(0, 0, 0, 0);
 }
 
 function getAnchors(line: Array<Point>,

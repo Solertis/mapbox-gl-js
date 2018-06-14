@@ -8,7 +8,43 @@ import checkMaxAngle from './check_max_angle';
 import type Point from '@mapbox/point-geometry';
 import type {Shaping, PositionedIcon} from './shaping';
 
-export default getAnchors;
+import assert from 'assert';
+
+export { getAnchors, getCenterAnchor };
+
+function getCenterAnchor(line: Array<Point>) {
+    // TODO: Handle text-max-angle calculation and either reject or find alternative
+    let lineLength = 0;
+    for (let k = 0; k < line.length - 1; k++) {
+        lineLength += line[k].dist(line[k + 1]);
+    }
+
+    let prevDistance = 0;
+    const centerDistance = lineLength / 2;
+
+    for (let i = 0; i < line.length - 1; i++) {
+
+        const a = line[i],
+            b = line[i + 1];
+
+        const segmentDistance = a.dist(b),
+            angle = b.angleTo(a);
+
+        if (prevDistance + segmentDistance > centerDistance) {
+            // The center is on this segment
+            const t = (centerDistance - prevDistance) / segmentDistance,
+                x = interpolate(a.x, b.x, t),
+                y = interpolate(a.y, b.y, t);
+
+            const anchor = new Anchor(x, y, angle, i);
+            anchor._round();
+            return anchor;
+        }
+
+        prevDistance += segmentDistance;
+    }
+    assert(false);
+}
 
 function getAnchors(line: Array<Point>,
                     spacing: number,

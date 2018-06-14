@@ -2,7 +2,7 @@
 
 import Anchor from './anchor';
 
-import getAnchors from './get_anchors';
+import { getAnchors, getCenterAnchor } from './get_anchors';
 import clipLine from './clip_line';
 import OpacityState from './opacity_state';
 import { shapeText, shapeIcon, WritingMode } from './shaping';
@@ -232,10 +232,12 @@ function addFeature(bucket: SymbolBucket,
             }
         }
     } else if (symbolPlacement === 'line-center') {
+        // No clipping, multiple lines per feature are allowed
+        // "lines" with only one point are ignored as in clipLines
         for (const line of feature.geometry) {
-            // Use unclipped lines.
-            // TODO: what does multiple lines in a geometry mean in this case?
-            addSymbolAtAnchor(line, getCenterAnchor(line));
+            if (line.length > 1) {
+                addSymbolAtAnchor(line, getCenterAnchor(line));
+            }
         }
     } else if (feature.type === 'Polygon') {
         for (const polygon of classifyRings(feature.geometry, 0)) {

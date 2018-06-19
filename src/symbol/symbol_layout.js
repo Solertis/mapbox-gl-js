@@ -236,7 +236,16 @@ function addFeature(bucket: SymbolBucket,
         // "lines" with only one point are ignored as in clipLines
         for (const line of feature.geometry) {
             if (line.length > 1) {
-                addSymbolAtAnchor(line, getCenterAnchor(line));
+                const anchor = getCenterAnchor(
+                    line,
+                    textMaxAngle,
+                    shapedTextOrientations.vertical || shapedTextOrientations.horizontal,
+                    shapedIcon,
+                    glyphSize,
+                    textMaxBoxScale);
+                if (anchor) {
+                    addSymbolAtAnchor(line, anchor);
+                }
             }
         }
     } else if (feature.type === 'Polygon') {
